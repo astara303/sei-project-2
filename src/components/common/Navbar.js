@@ -32,7 +32,7 @@ class Navbar extends React.Component {
           </div>
           <div className={`navbar-menu ${navbarOpen ? 'is-active' : ''}`}>
             <div className="navbar-end">
-              <Link className="navbar-item" to="/fact">Nerd Fact</Link>
+              {/* <Link className="navbar-item" to="/fact">Nerd Fact</Link> */}
               <Link className="navbar-item" to="/quote">Nerd Quote</Link>
               <Link className="navbar-item" to="/joke">Nerd Joke</Link>
             </div>

@@ -11,7 +11,7 @@ const Home = () => (
         <h1 className="title has-text-white is-1">{'//TODO: QUIZ'}</h1>
         <h2 className="subtitle has-text-white is-4 has-text-weight-bold">The site for programmers and nerds</h2>
         <Link to={'/quiz'}>
-          <button className="subtitle button">START QUIZ</button>
+          <button className="subtitle button">QUIZ</button>
         </Link>
       </div>
     </div>
