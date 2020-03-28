@@ -1,68 +1,98 @@
-# ![](https://ga-dash.s3.amazonaws.com/production/assets/logo-9f88ae6c9c3871690e33280fcf557f33.png) Project #2: Reacathon
+# //TODO:Quiz
+> Test your programmer knowledge with a quiz! Try easy, medium, and hard difficulties. Looking for something to share around the office? Chek out the quotes and jokes!
 
-## Overview
+![](https://i.ibb.co/jVth02C/slideshow3.png)
 
-The second project is to **build a React application** that consumes a **public API**.
+A classmate and I created this site in two days, which was a real test of our front-end knowledge halfway through our _[General Assembly](https://generalassemb.ly/)_ Software Engineering Immersive course. We used three public APIs to create a quiz and pages for nerdy quotes and jokes.
 
-### Technical Requirements
+You can visit the site _[here](https://todo-quiz-app.herokuapp.com/)_.
 
-Your app must:
+## Tools and Skills
 
-* **Consume a public API** – this could be anything but it must make sense for your project.
-* **Have several components** - At least one classical and one functional.
-* **The app should include a router** - with several "pages".
-* **Include wireframes** - that you designed before building the app.
-* Have **semantically clean HTML** - you make sure you write HTML that makes structural sense rather than thinking about how it might look, which is the job of CSS.
-* **Be deployed online** and accessible to the public.
+- JavaScript
+- React.js
+- HTML5
+- CSS3
+- RESTful APIs
+- Bulma CSS Framework
+- npm
+- Heroku
+- GitHub
 
----
+My partner and I built a website utilizing a public RESTful API. By reading the documentation we were able to generate random quotes and jokes from API databases and a quiz with multiple difficulty settings.
 
-## Necessary Deliverables
+We took advantage of React's amazing state functionality to render new quiz questions and answers as required.
 
-* A **working application**, hosted somewhere on the internet
-* A **link to your hosted working app** in the URL section of your Github repo
-* A **git repository hosted on Github**, with a link to your hosted project, and frequent commits dating back to the _very beginning_ of the project
+We styled the site using the Bulma CSS framework.
 
----
+It is hosted on Heroku.
 
-## Suggested Ways to Get Started
+It is playable on mobile.
 
-* **Don’t hesitate to write throwaway code** to solve short term problems.
-* **Read the docs for whatever technologies / frameworks / APIs you use**.
-* **Write DRY code**.
-* **Be consistent with your code style.**
-* **Commit early, commit often.** Don’t be afraid to break something because you can always go back in time to a previous version.
-* **Keep user stories small and well-defined**, and remember – user stories focus on what a user needs, not what development tasks need accomplishing.
-* **Write code another developer wouldn't have to ask you about**. Do your naming conventions make sense? Would another developer be able to look at your app and understand what everything is?
-* **Make it all well-formatted.** Are you indenting, consistently? Can we find the start and end of every div, curly brace, etc?
-* **Comment your code.** Will someone understand what is going on in each block or function? Even if it's obvious, explaining the what & why means someone else can pick it up and get it.
-* **Write pseudocode before you write actual code.** Thinking through the logic of something helps.
+## Usage
 
----
+On the homepage, click the Quiz button to be taken to the quiz. You may choose easy, medium, or hard difficulty. 
 
-## Useful Resources
+Nerd Quote and Nerd Joke are both components routed on the nav bar.
 
-* [List of open APIs](https://any-api.com/)
+## Functionality
 
-* [A collective list of free APIs for use in software and web development.](https://github.com/public-apis/public-apis)
+The trivia API has three difficulty levels built-in, and we concatenate the text content of the button you click (easy, medium, or hard) into the API request, so that we only load the trivia questions from that difficulty.
 
-* [18 Fun APIs For Your Next Project - Victoria Bergquist - Medium](https://medium.com/@vicbergquist/18-fun-apis-for-your-next-project-8008841c7be9)
+```
+handleDifficulty = (e) => {
+    const difficulty = e.target.textContent.toLowerCase()
+    this.gameStart(difficulty)
+  }
+```
 
-* [Best Free APIs of 2019](https://rapidapi.com/collection/best-free-apis?utm_source=google&utm_medium=cpc&utm_campaign=1757574668_67679208454&utm_term=%2Bfree%20%2Bapis_b&utm_content=1t1&gclid=CjwKCAiAgqDxBRBTEiwA59eENwNUVqPD-v79Cgwl3EWtcRuMZlVGOCxAf5RcH74ZUM6cMKp6o5FZRxoCpVgQAvD_BwE)
+The trivia questions were encoded in base64, so we had to decode using window.btoa or atob when neccesary. 
 
+We created a quiz by getting the required information from a _[public trivia API](https://opentdb.com/api_config.php)_ that supplied a 'correct answer' and 'incorrect answers' for a question. 
+To display the questions:
+1. GET the data using an axios request.
+2. Store the first indexed item in an array of objects in state.
+3. Take the incorrect and correct answers provided byt the data and combine these into a new array.
+4. Sort the answers randomly.
+5. Check the text content of the button that was clicked with the correct answer.
+  - If was incorrect, make the result box red and include the correct answer.
+  - If it was correct, make the result box green and congratulate the user.
+    - Add one to the score and display this to the user.
+6. When the question has been answered, add +1 to the variable that calls the index of the API data to call the next question.
+  - Repeat steps 2 -> 6 until the user has answered 5 questions.
+7. Render the result page, passing down the score as a prop to display.
 
-These are just a few examples of lists of free APIs you could use, there are hundreds out there!
+```
+gameStart = async (difficulty) => {
+    try {
+      const res = await axios.get(`https://opentdb.com/api.php?amount=10&encode=base64&category=18&difficulty=${difficulty}`)
+      const questionObj = {
+        question: res.data.results[0].question,
+        correctAnswer: res.data.results[0].correct_answer,
+        incorrectAnswers: res.data.results[0].incorrect_answers
+      }
+      const combined = [...questionObj.incorrectAnswers]
+      const combinedAnswers = [...combined, questionObj.correctAnswer].sort(() => Math.random() - 0.5)
+      this.setState({ results: res.data.results, questionObj, combinedAnswers, difficulty })
 
----
+    } catch (err) {
+      this.props.history.push('/notfound')
+    }
+  }
+```
 
-## Project Feedback + Evaluation
+## Needs Improvement
 
-* __Project Workflow__: Did you complete the user stories, wireframes, task tracking as specified above? Did you use source control as expected for the phase of the program you’re in (detailed above)?
+- We wanted to provide an option to set the game on a timer (the Timer component is still included with the code). Unfortunately we were not able to impliment this in the two-day time frame but it is something I would like to enact on a future project.
 
-* __Technical Requirements__: Did you deliver a project that met all the technical requirements? Given what the class has covered so far, did you build something that was reasonably complex?
+- Sometimes the text will float outside of the answer buttons if the answer is very long. This is most notable on mobile. I would find a way to make whichever element is not allowing the button to stretch to be more reactive.
 
-* __Creativity__: Did you added a personal spin or creative element into your project submission? Did you deliver something of value to the end user (not just a login button and an index page)?
+## Hello!
 
-* __Code Quality__: Did you follow code style guidance and best practices covered in class, such as spacing, modularity, and semantic naming? Did you comment your code as your instructors as we have in class?
+I'm an avid enjoyer of JavaScript. I would be so happy to discuss this project, or any of your JavaScript projects with you.
+I am a big gaming nerd so feel free to share your games with me!
+If you'd like to see more of my work or get to know a bit more about me, please check out my portfolio:
 
-* __Problem Solving__: Are you able to defend why you implemented your solution in a certain way? Can you demonstrated that you thought through alternative implementations? _(Note that this part of your feedback evaluation will take place during your one-on-one code review with your instructors, after you've completed the project.)_# sei-project-2
+_[My Portfolio](https://astara303.github.io/portfolio/)_
+
+Thank you for reading!
