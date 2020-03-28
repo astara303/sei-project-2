@@ -19,7 +19,7 @@ You can visit the site _[here](https://todo-quiz-app.herokuapp.com/)_.
 - Heroku
 - GitHub
 
-My partner and I built a website utilizing a public RESTful API. By reading the documentation we were able to generate random quotes and jokes from API databases and a quiz with multiple difficulty settings.
+My partner and I built a website utilizing RESTful APIs. By reading the documentation we were able to generate random quotes and jokes from API databases and a quiz with multiple difficulty settings.
 
 We took advantage of React's amazing state functionality to render new quiz questions and answers as required.
 
